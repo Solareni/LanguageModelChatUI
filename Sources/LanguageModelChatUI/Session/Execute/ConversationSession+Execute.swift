@@ -138,6 +138,11 @@ public extension ConversationSession {
             await requestUpdate(view: messageListView)
 
             await updateTitle()
+            await maybeCompressContextIfNeeded(
+                model: model,
+                tools: tools,
+                capabilities: modelCapabilities
+            )
         } catch {
             _ = appendNewMessage(role: .assistant) { msg in
                 msg.textContent = "```\n\(error.localizedDescription)\n```"

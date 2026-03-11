@@ -45,19 +45,38 @@ public final class ConversationSession: Identifiable, Sendable {
         public let delegate: SessionDelegate?
         public let systemPrompt: String
         public let collapseReasoningWhenComplete: Bool
+        public let contextCompression: ContextCompression?
 
         public init(
             storage: StorageProvider,
             tools: ToolProvider? = nil,
             delegate: SessionDelegate? = nil,
             systemPrompt: String = "You are a helpful assistant.",
-            collapseReasoningWhenComplete: Bool = true
+            collapseReasoningWhenComplete: Bool = true,
+            contextCompression: ContextCompression? = nil
         ) {
             self.storage = storage
             self.tools = tools
             self.delegate = delegate
             self.systemPrompt = systemPrompt
             self.collapseReasoningWhenComplete = collapseReasoningWhenComplete
+            self.contextCompression = contextCompression
+        }
+    }
+
+    public struct ContextCompression: Sendable {
+        public var triggerRatio: Double
+        public var maxSummaryFacts: Int
+        public var onFact: @Sendable (String) async -> Void
+
+        public init(
+            triggerRatio: Double = 0.7,
+            maxSummaryFacts: Int = 6,
+            onFact: @escaping @Sendable (String) async -> Void
+        ) {
+            self.triggerRatio = triggerRatio
+            self.maxSummaryFacts = maxSummaryFacts
+            self.onFact = onFact
         }
     }
 
@@ -73,6 +92,8 @@ public final class ConversationSession: Identifiable, Sendable {
     let sessionDelegate: SessionDelegate?
     let systemPrompt: String
     let collapseReasoningWhenComplete: Bool
+    let contextCompression: ContextCompression?
+    public var isCompressingContext = false
 
     // MARK: - Reactive
 
@@ -131,6 +152,7 @@ public final class ConversationSession: Identifiable, Sendable {
         sessionDelegate = configuration.delegate
         systemPrompt = configuration.systemPrompt
         collapseReasoningWhenComplete = configuration.collapseReasoningWhenComplete
+        contextCompression = configuration.contextCompression
         models = .init()
         refreshContentsFromDatabase()
     }

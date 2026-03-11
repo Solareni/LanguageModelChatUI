@@ -115,6 +115,7 @@ open class ChatViewController: UIViewController {
         let session = ConversationSessionManager.shared.session(for: conversationID, configuration: sessionConfiguration)
         applyConversationModels(conversationModels, to: session)
         currentSession = session
+        session.startContextWindow()
         messageListView.session = session
         chatInputView.delegate = self
         chatInputView.bind(conversationID: conversationID)

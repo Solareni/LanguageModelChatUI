@@ -14,7 +14,7 @@ private let requestBuildLogger = Logger(subsystem: "LanguageModelChatUI", catego
 extension ConversationSession {
     /// Build request messages from conversation history.
     func buildRequestMessages(capabilities: Set<ModelCapability>) -> [ChatRequestBody.Message] {
-        messages.flatMap { buildRequestMessages(from: $0, capabilities: capabilities) }
+        contextWindowMessages().flatMap { buildRequestMessages(from: $0, capabilities: capabilities) }
     }
 
     func buildRequestMessages(

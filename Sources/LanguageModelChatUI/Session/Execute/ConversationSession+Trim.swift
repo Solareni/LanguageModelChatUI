@@ -72,6 +72,13 @@ extension ConversationSession {
         }
     }
 
+    func estimatedTokenCountForRequest(
+        messages: [ChatRequestBody.Message],
+        tools: [ChatRequestBody.Tool]?
+    ) async -> Int {
+        await estimateTokenCount(messages: messages, tools: tools)
+    }
+
     private func estimateTokenCount(
         messages: [ChatRequestBody.Message],
         tools: [ChatRequestBody.Tool]?

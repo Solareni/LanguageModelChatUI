@@ -10,6 +10,8 @@ final class ToolHintView: MessageListRowView {
 
     var toolName: String = .init()
 
+    var parameters: String = "{}"
+
     var state: ToolCallState = .running {
         didSet {
             updateContentText()
@@ -127,16 +129,24 @@ final class ToolHintView: MessageListRowView {
     }
 
     private func updateContentText() {
+        // 从 parameters 中提取 type（用于 system_command 等工具）
+        var displayType = toolName
+        if let data = parameters.data(using: .utf8),
+           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let type = json["type"] as? String {
+            displayType = type
+        }
+
         switch state {
         case .running:
             isClickable = false
-            label.text = String.localized("Tool call for \(toolName) running")
+            label.text = String.localized("\(displayType) 执行中")
         case .succeeded:
             isClickable = true
-            label.text = String.localized("Tool call for \(toolName) completed.")
+            label.text = String.localized("\(displayType) 完成")
         case .failed:
             isClickable = true
-            label.text = String.localized("Tool call for \(toolName) failed.")
+            label.text = String.localized("\(displayType) 失败")
         }
         invalidateLayout()
     }

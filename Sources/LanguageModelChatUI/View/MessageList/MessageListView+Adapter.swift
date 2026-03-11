@@ -165,7 +165,7 @@ extension MessageListView: ListViewAdapter {
             if case let .toolCallHint(_, toolCall) = entry {
                 toolHintView.theme = theme
                 toolHintView.toolName = toolCall.toolName
-                toolHintView.text = toolCall.parameters
+                toolHintView.parameters = toolCall.parameters
                 toolHintView.state = toolCall.state
                 toolHintView.clickHandler = nil
             }
