@@ -13,12 +13,12 @@ private let compressionLogger = Logger(subsystem: "LanguageModelChatUI", categor
 
 extension ConversationSession {
     func maybeCompressContextIfNeeded(
-        model: ConversationSession.Model,
+        chatModel: ConversationSession.Model,
         tools: [ChatRequestBody.Tool]?,
         capabilities: Set<ModelCapability>
     ) async {
         guard let compression = contextCompression else { return }
-        guard model.contextLength > 0 else { return }
+        guard chatModel.contextLength > 0 else { return }
         guard !isCompressingContext else { return }
 
         let windowMessages = contextWindowMessages()
@@ -28,15 +28,17 @@ extension ConversationSession {
         await injectSystemPrompt(&requestMessages, capabilities: capabilities)
 
         let estimatedTokens = await estimatedTokenCountForRequest(messages: requestMessages, tools: tools)
-        let threshold = Int(Double(model.contextLength) * compression.triggerRatio)
+        let threshold = Int(Double(chatModel.contextLength) * compression.triggerRatio)
         guard estimatedTokens > threshold else { return }
 
         isCompressingContext = true
         defer { isCompressingContext = false }
 
+        let compressionModel = models.compression ?? chatModel
+
         let summary = await summarizeContext(
             messages: windowMessages,
-            model: model,
+            model: compressionModel,
             maxFacts: compression.maxSummaryFacts
         )
         let facts = parseSummaryFacts(summary, maxFacts: compression.maxSummaryFacts)

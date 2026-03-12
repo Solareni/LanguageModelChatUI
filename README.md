@@ -48,7 +48,7 @@ let model = ConversationSession.Model(
 )
 
 let controller = ChatViewController(
-    models: .init(chat: model, titleGeneration: model),
+    models: .init(chat: model, titleGeneration: model, compression: model),
     sessionConfiguration: .init(
         storage: DisposableStorageProvider.shared
     )

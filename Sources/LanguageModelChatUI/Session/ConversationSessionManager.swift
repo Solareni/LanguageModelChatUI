@@ -42,4 +42,14 @@ public final class ConversationSessionManager: @unchecked Sendable {
         executingSessions.remove(conversationID)
         executingSessionsSubject.send(executingSessions)
     }
+
+    /// 移除缓存的会话，强制下次重新创建
+    public func removeSession(for conversationID: String) {
+        sessions.removeValue(forKey: conversationID)
+    }
+
+    /// 清除所有缓存的会话
+    public func removeAllSessions() {
+        sessions.removeAll()
+    }
 }

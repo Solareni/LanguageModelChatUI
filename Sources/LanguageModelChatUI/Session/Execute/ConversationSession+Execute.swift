@@ -139,7 +139,7 @@ public extension ConversationSession {
 
             await updateTitle()
             await maybeCompressContextIfNeeded(
-                model: model,
+                chatModel: model,
                 tools: tools,
                 capabilities: modelCapabilities
             )

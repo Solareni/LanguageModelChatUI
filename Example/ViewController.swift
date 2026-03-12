@@ -115,7 +115,7 @@ class ViewController: ConfigurableViewController {
     ) -> ChatViewController {
         let model = def.createModel()
         let chatVC = ChatViewController(
-            models: .init(chat: model, titleGeneration: model),
+            models: .init(chat: model, titleGeneration: model, compression: model),
             sessionConfiguration: .init(
                 storage: DisposableStorageProvider.shared,
                 tools: toolProvider,

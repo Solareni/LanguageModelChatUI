@@ -14,6 +14,9 @@ private let submissionLogger = Logger(subsystem: "LanguageModelChatUI", category
     if let titleGeneration = models.titleGeneration {
         session.models.titleGeneration = titleGeneration
     }
+    if let compression = models.compression {
+        session.models.compression = compression
+    }
 }
 
 func makeUserInput(from object: ChatInputContent) -> ConversationSession.UserInput {

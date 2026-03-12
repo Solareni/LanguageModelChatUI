@@ -32,10 +32,16 @@ public final class ConversationSession: Identifiable, Sendable {
     public struct Models: Sendable {
         public var chat: Model?
         public var titleGeneration: Model?
+        public var compression: Model?
 
-        public init(chat: Model? = nil, titleGeneration: Model? = nil) {
+        public init(
+            chat: Model? = nil,
+            titleGeneration: Model? = nil,
+            compression: Model? = nil
+        ) {
             self.chat = chat
             self.titleGeneration = titleGeneration
+            self.compression = compression
         }
     }
 
